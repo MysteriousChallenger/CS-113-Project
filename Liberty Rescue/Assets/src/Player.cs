@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Player : MonoBehaviour, Controllable
 {
-    public MoveCurve moveCurve {get; set;} = new TopSpeedCurve(15f, 40f, 20f);
-    [SerializeField] public float jumpForce {get; set;} = 20f;
+    public MoveCurve moveCurve {get; set;} = new TopSpeedCurve(900f, 40f, 15f);
+    [SerializeField] public float jumpForce {get; set;} = 900f;
     [SerializeField] public int extraJumpCount {get; set;} = 1;
     [SerializeField] public int extraJumpsRemaining {get; set;} = 0;
     public Rigidbody2D body {get; set;}

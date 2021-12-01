@@ -6,5 +6,7 @@ public class GlobalSettings : MonoBehaviour
 {
     void Start() {
         Application.targetFrameRate = 144;
+
+
     }
 }
