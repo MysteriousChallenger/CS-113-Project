@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,6 +9,8 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     private Controllable character;
     private Vector2 screenCoords;
+
+
     public UnityEvent<int, int> changeScreenEvent;
     void Start()
     {
@@ -31,6 +34,7 @@ public class Controller : MonoBehaviour
         }
 
         character.MoveHorizontal(Input.GetAxisRaw("Horizontal"));
+        character.EnforceMaxFallSpeed();
     }
 
     void UpdateScreenLocation(Controllable character) {
@@ -44,8 +48,8 @@ public class Controller : MonoBehaviour
         float x = spaceCoords.x;
         float y = spaceCoords.y;
 
-        int screen_x = (int)((x / Constants.CAMERA_VIEWPORT_WIDTH) + 0.5);
-        int screen_y = (int)((y / Constants.CAMERA_VIEWPORT_HEIGHT) + 0.5);
+        int screen_x = (int)Math.Floor((x / Constants.CAMERA_VIEWPORT_WIDTH) + 0.5);
+        int screen_y = (int)Math.Floor((y / Constants.CAMERA_VIEWPORT_HEIGHT) + 0.5);
 
         return new Vector2(screen_x, screen_y);
     }

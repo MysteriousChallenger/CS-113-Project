@@ -7,11 +7,15 @@ public interface Controllable
     public float jumpForce {get; set;}
     public int extraJumpCount {get; set;}
     public int extraJumpsRemaining {get; set;}
+
+    public void Shoot();
+
 }
 
 public static class ControllableExtensions
 {
     public static LayerMask GroundLayer = ~LayerMask.NameToLayer("ground");
+    public static float MAX_FALL_SPEED = -54*20;
 
     public static void Jump(this Controllable controllable)
     {
@@ -45,5 +49,14 @@ public static class ControllableExtensions
         if (controllable.IsGrounded()) {
             controllable.extraJumpsRemaining = controllable.extraJumpCount;
         }
+    }
+
+    public static void EnforceMaxFallSpeed(this Controllable controllable) {
+        controllable.body.velocity = new Vector2(controllable.body.velocity.x, Mathf.Max(controllable.body.velocity.y, MAX_FALL_SPEED));
+    }
+
+    public static void Respawn(this Controllable controllable, Vector2 respawnPoint) {
+        controllable.body.velocity = new Vector2(0,0);
+        controllable.body.transform.position = respawnPoint;
     }
 } 
