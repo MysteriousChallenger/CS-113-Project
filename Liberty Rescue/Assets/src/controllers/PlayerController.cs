@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Controller : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
     private Controllable character;
@@ -16,6 +16,14 @@ public class Controller : MonoBehaviour
     {
         character = GameObject.Find("player").GetComponent<Player>();
         screenCoords = ScreenCoords(character.collider.bounds.center);
+        HookUpUI(character);
+    }
+
+    void HookUpUI(Controllable character) {
+        character.changeHP.AddListener(
+            GameObject.Find("Healthbar").GetComponent<HealthBar>().setDisplayedHealth
+        );
+        character.SetHP(character.HP);
     }
 
     // Update is called once per frame
@@ -23,7 +31,6 @@ public class Controller : MonoBehaviour
     {
         UpdateCharacterControls(character);
         UpdateScreenLocation(character);
-        
     }
 
     void UpdateCharacterControls(Controllable character) {
@@ -31,6 +38,10 @@ public class Controller : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space)) {
             character.Jump();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C)) {
+            character.Shoot();
         }
 
         character.MoveHorizontal(Input.GetAxisRaw("Horizontal"));

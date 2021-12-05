@@ -55,11 +55,11 @@ public class CameraControl : MonoBehaviour
     }
 
     void InitCameraPosition(){
-        transform.position = new Vector3(0,0,-10);
+        //transform.position = new Vector3(0,0,-10);
     }
 
     void HandleScreenChangeEvent() {
-        Controller globalController = GameObject.Find("global").GetComponent<Controller>();
+        PlayerController globalController = GameObject.Find("global").GetComponent<PlayerController>();
         globalController.changeScreenEvent.AddListener(OnNewScreen);
     }
     

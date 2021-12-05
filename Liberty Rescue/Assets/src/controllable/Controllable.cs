@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 public interface Controllable
 {
     public Rigidbody2D body {get; set;}
@@ -7,6 +8,11 @@ public interface Controllable
     public float jumpForce {get; set;}
     public int extraJumpCount {get; set;}
     public int extraJumpsRemaining {get; set;}
+    public Vector2 facing {get; set;}
+
+    public float HP {get; set;}
+    public float HP_MAX {get; set;}
+    public UnityEvent<float, float>  changeHP {get; set;}
 
     public void Shoot();
 
@@ -14,7 +20,7 @@ public interface Controllable
 
 public static class ControllableExtensions
 {
-    public static LayerMask GroundLayer = ~LayerMask.NameToLayer("ground");
+    public static LayerMask GroundLayer = LayerMask.GetMask("ground");
     public static float MAX_FALL_SPEED = -54*20;
 
     public static void Jump(this Controllable controllable)
@@ -32,6 +38,12 @@ public static class ControllableExtensions
     {
         float acceleration = controllable.moveCurve.Acceleration(controllable.body.velocity.x, x);
         controllable.body.velocity += new Vector2(acceleration, 0);
+
+        if (x < 0) {
+            controllable.facing = new Vector2(-1,0);
+        } else if (x > 0) {
+            controllable.facing = new Vector2(1,0);
+        }
     } 
 
     public static bool IsGrounded(this Controllable controllable) {
@@ -58,5 +70,10 @@ public static class ControllableExtensions
     public static void Respawn(this Controllable controllable, Vector2 respawnPoint) {
         controllable.body.velocity = new Vector2(0,0);
         controllable.body.transform.position = respawnPoint;
+    }
+
+    public static void SetHP(this Controllable controllable, float value) {
+        controllable.HP = Mathf.Clamp(value, 0, controllable.HP_MAX);
+        controllable.changeHP.Invoke(controllable.HP, controllable.HP_MAX);
     }
 } 
