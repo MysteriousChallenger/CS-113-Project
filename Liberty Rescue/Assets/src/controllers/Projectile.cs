@@ -11,14 +11,14 @@ public class Projectile : MonoBehaviour
     {
     }
 
-    public void Initialize(Vector2 position, Vector2 velocity, Controllable parent) {
+    public void Initialize(Vector2 position, Vector2 velocity, Controllable parent, float lifetime = 2f) {
         this.gameObject.SetActive(true);
         this.body = GetComponent<Rigidbody2D>();
         this.body.position = position;
         this.body.velocity = velocity;
         this.parent = parent;
         GetComponent<Transform>().parent = null;
-        Destroy(this.gameObject, 2f);
+        Destroy(this.gameObject, lifetime);
         Physics2D.IgnoreCollision(parent.collider, GetComponent<Collider2D>());
     }
 

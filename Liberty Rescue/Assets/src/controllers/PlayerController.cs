@@ -7,9 +7,8 @@ using UnityEngine.Events;
 public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
-    private Controllable character;
+    public Controllable character;
     private Vector2 screenCoords;
-
 
     public UnityEvent<int, int> changeScreenEvent;
     void Start()
@@ -17,6 +16,7 @@ public class PlayerController : MonoBehaviour
         character = GameObject.Find("player").GetComponent<Player>();
         screenCoords = ScreenCoords(character.collider.bounds.center);
         HookUpUI(character);
+        HookUpRespawnPoint(character);
     }
 
     void HookUpUI(Controllable character) {
@@ -24,6 +24,15 @@ public class PlayerController : MonoBehaviour
             GameObject.Find("Healthbar").GetComponent<HealthBar>().setDisplayedHealth
         );
         character.SetHP(character.HP);
+    }
+
+    void HookUpRespawnPoint(Controllable character) {
+        void SetRespawnPoint(int x, int y) {
+            character.respawnPoint = character.body.position;
+        }
+        this.changeScreenEvent.AddListener(
+            SetRespawnPoint
+        );
     }
 
     // Update is called once per frame

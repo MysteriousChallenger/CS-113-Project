@@ -16,6 +16,7 @@ public class BasicEnemy : MonoBehaviour, Controllable
     public float HP_MAX {get; set;} = 100;
 
     public UnityEvent<float, float>  changeHP {get; set;} = new UnityEvent<float, float>();
+    public Vector2? respawnPoint {get; set;} = null;
 
     public GameObject projectile;
 
@@ -53,13 +54,10 @@ public class BasicEnemy : MonoBehaviour, Controllable
 
         if (controllable == GameObject.Find("player").GetComponent<Player>()) {
 
-            controllable.SetHP(controllable.HP - 1);
+            controllable.SetHP(controllable.HP - 3);
             Vector2 direction = (this.body.position - controllable.body.position).normalized;
             direction += new Vector2(0,0.3f);
-            this.body.velocity += direction * 2000;
-            if (controllable.HP == 0) {
-                Destroy(collision.gameObject);
-            }
+            this.body.velocity += direction * 1500;
         }
     }
 }

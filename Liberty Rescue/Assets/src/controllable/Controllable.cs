@@ -13,6 +13,7 @@ public interface Controllable
     public float HP {get; set;}
     public float HP_MAX {get; set;}
     public UnityEvent<float, float>  changeHP {get; set;}
+    public Vector2? respawnPoint {get; set;}
 
     public void Shoot();
 
@@ -67,13 +68,23 @@ public static class ControllableExtensions
         controllable.body.velocity = new Vector2(controllable.body.velocity.x, Mathf.Max(controllable.body.velocity.y, MAX_FALL_SPEED));
     }
 
-    public static void Respawn(this Controllable controllable, Vector2 respawnPoint) {
-        controllable.body.velocity = new Vector2(0,0);
-        controllable.body.transform.position = respawnPoint;
+    public static void Respawn(this Controllable controllable) {
+        if (controllable.respawnPoint is Vector2 realRespawnPoint) {
+            controllable.body.velocity = new Vector2(0,0);
+            controllable.body.transform.position = new Vector3(realRespawnPoint.x, realRespawnPoint.y, 0);
+            controllable.SetHP(controllable.HP_MAX);
+        }
     }
 
     public static void SetHP(this Controllable controllable, float value) {
         controllable.HP = Mathf.Clamp(value, 0, controllable.HP_MAX);
         controllable.changeHP.Invoke(controllable.HP, controllable.HP_MAX);
+        if (controllable.HP == 0) {
+            if (controllable.respawnPoint is Vector2 realRespawnPoint) {
+                controllable.Respawn();
+            } else {
+                MonoBehaviour.Destroy(controllable.body.gameObject);
+            }
+        }
     }
 } 

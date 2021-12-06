@@ -15,13 +15,16 @@ public class Player : MonoBehaviour, Controllable
     public float HP_MAX {get; set;} = 100;
 
     public UnityEvent<float, float>  changeHP {get; set;} = new UnityEvent<float, float>();
+    public Vector2? respawnPoint {get; set;} = null;
 
     public GameObject projectile;
+
+    public Gun gun;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        gun = new Shotgun(projectile);
     }
 
     // Awake is called when a GameObject is activated or loaded into a scene or instantiated
@@ -38,9 +41,6 @@ public class Player : MonoBehaviour, Controllable
     }
 
     public void Shoot(){
-        GameObject bullet = Instantiate(projectile, transform.position, 
-                                                     transform.rotation);
-
-        bullet.GetComponent<Projectile>().Initialize(body.position, this.facing.normalized * 54 * 30, this);
+        gun.Shoot(this);
     }
 }
